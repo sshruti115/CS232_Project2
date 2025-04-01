@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
+#include <stdbool.h> //Sabene added boolean library
 
 //Sabene completed
 /* TODO: structure definitions */
