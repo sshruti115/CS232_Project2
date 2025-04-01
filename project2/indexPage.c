@@ -7,19 +7,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h> //Sabene added boolean library
 
 //Sabene completed
 /* TODO: structure definitions */
 struct TrieNode{
   int count; //Counts how many times a word appears
   struct TrieNode *children[26]; //26 Child pointers for lowercase alphabets
-  bool isEndOfWord;
+  int isEndOfWord;
 };
 
 struct TrieNode *getNode(){
   struct TrieNode* node = (struct TrieNode*)malloc(sizeof(struct TrieNode));
-  node->isEndOfWord = false;
+  node->isEndOfWord = 0;
   for (int i = 0; i < 26; i++){
       node->children[i] = NULL;
   }
