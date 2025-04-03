@@ -1,3 +1,19 @@
 
-Sabene: 90 minutes thus far
+Sabene:  Three hours
+Sabene completed the following:
+        Set up github directory with all files
+        struct TrieNode
+        struct TrieNode* getNode()
+        main
+        int freeTrieMemory
+        Sabene added parameters to int freeTrieMemory(struct TrieNode* root);
+
 Shruti: 
+    Shruti completed the following:
+        Set up github repository
+        int indexPage
+        int addWordOccurrence
+        void printTrieContents
+        void traverse
+        void printTrieContents
+

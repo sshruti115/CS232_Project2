@@ -15,7 +15,7 @@ struct TrieNode {
     struct TrieNode* children[26]; // 26 Child pointers for lowercase alphabets
     int isEndOfWord;
 };
-
+//Sabene completed
 struct TrieNode* getNode() {
     struct TrieNode* node = (struct TrieNode*)malloc(sizeof(struct TrieNode));
     node->isEndOfWord = 0;
@@ -85,6 +85,7 @@ void printTrieContents(struct TrieNode* root);
 
 char word[100];
 
+//Shruti Completed
 // Function to traverse the Trie and print its contents
 void traverse(struct TrieNode* node, int depth) {
     if (!node) return;
@@ -101,7 +102,7 @@ void traverse(struct TrieNode* node, int depth) {
         }
     }
 }
-
+//Shruti Completed
 // Function to print Trie contents
 void printTrieContents(struct TrieNode* root) {
     traverse(root, 0);
@@ -111,20 +112,34 @@ void printTrieContents(struct TrieNode* root) {
 int freeTrieMemory(struct TrieNode* root);
 int getText(const char* srcAddr, char* buffer, const int bufSize);
 
-//Sabene's work in progress
+//Sabene completed
 int main(int argc, char** argv){
   /* TODO: write the (simple) main function
 
   /* argv[1] will be the URL to index, if argc > 1 */
   //If less than two arguments passed, return
   if (argc <2){
-    return;
+    fprintf(stderr, "Usage: %s <URL>\n", argv[0]);
+    return 1;
   }
+  const char* url = argv[1];
+  //Initialize root of the Trie
+    struct TrieNode* root = getNode();
 
- while (){
+  //Calls a function that indexes the web page and returns a pointer to your trie
+  indexPage(url, root);
+  
+  if (indexPage(url, root) != 0) {
+    fprintf(stderr, "Error indexing the page.\n");
+    freeTrieMemory(root);  // Free any allocated memory in case of failure
+    return -1;
+}
 
- }
+  //Call a function that prints out the counts of all the words in the trie
+  printTrieContents(root);
 
+  //Calls a function to destroy the trie (i.e., free any allocated memory) when it is no longer needed
+  freeTrieMemory(root);
   return 0;
 }
 
@@ -154,7 +169,7 @@ int indexPage(const char* url, struct TrieNode* root) {
 
     return 0;
 }
-
+//Shruti Completed
 int addWordOccurrence(const char* word, int wordLength, struct TrieNode* root) {
     if (!root) return -1; // Return error if root is NULL
 
@@ -179,6 +194,7 @@ int addWordOccurrence(const char* word, int wordLength, struct TrieNode* root) {
     current->count++;
     return 0;
 }
+//Shruti completed
 
 // Helper function to traverse and print Trie contents
 void traverse(struct TrieNode* node, char word[], int depth) {
@@ -196,7 +212,7 @@ void traverse(struct TrieNode* node, char word[], int depth) {
         }
     }
 }
-
+//Shruti Completed
 void printTrieContents(struct TrieNode* root) {
     char word[100];
     traverse(root, word, 0);
