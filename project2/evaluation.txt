@@ -7,12 +7,13 @@ Sabene completed the following:
         4. main
         5. int freeTrieMemory
         6. Wrote evaluation.txt except for logging Shruti's hours
-Shruti: 
-    Shruti completed the following:
-        1. Set up github repository
-        2. int indexPage
-        3. int addWordOccurrence
-        4. void printTrieContents
-        5. void traverse
-        6. Worked on debugging and testing
+Shruti: Approx 6 hours 
+Shruti completed the following:
+    1. Set up the GitHub repository for the project.
+    2. Implemented the following functions:
+   - int indexPage
+   - int addWordOccurrence
+   - void printTrieContents
+   - void traverse
+    3. Assisted with debugging and testing the code.
 
