@@ -1,5 +1,5 @@
 
-Sabene:  Approx. Three and a half hours
+Sabene:  Approx. 4 hours
 Sabene completed the following:
         1. Set up github directory with all files
         2. struct TrieNode
@@ -7,6 +7,7 @@ Sabene completed the following:
         4. main
         5. int freeTrieMemory
         6. Wrote evaluation.txt except for logging Shruti's hours
+        7. Assisted with debugging and testing the code including memory leaks
 Shruti: Approx 6 hours 
 Shruti completed the following:
     1. Set up the GitHub repository for the project.
