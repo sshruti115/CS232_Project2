@@ -27,11 +27,12 @@ struct TrieNode* getNode() {
     return node;
 }
 
-
 //Sabene added parameters
 int freeTrieMemory(struct TrieNode* root);
 int getText(const char* srcAddr, char* buffer, const int bufSize);
+//Shruti added these 2 parameters 
 int addWordOccurrence(const char* word, int wordLength, struct TrieNode* root); 
+int isValidWord(const char* word);
 
 /* NOTE: int return values can be used to indicate errors (typically non-zero)
    or success (typically zero return value) */
@@ -54,14 +55,36 @@ int indexPage(const char* url, struct TrieNode* root) {
 
     printf("%s\n", url); // Print the URL as required
 
+    // Define delimiters for tokenization
+    const char* delimiters = " \t\n\r.,!?;:()[]{}\"";
+
     // Process the retrieved text and add words to Trie
-    char* word = strtok(buffer, " \t\n\r.,!?;:()[]{}\"");
+    char* word = strtok(buffer, delimiters);
     while (word) {
-        printf("\t%s\n", word); // Print each word as it appears
-        addWordOccurrence(word, strlen(word), root);
-        word = strtok(NULL, " \t\n\r.,!?;:()[]{}\"");
+        if (isValidWord(word)) {
+            // Quick fix: remove leading "b'" if present
+            if (word[0] == 'b' && word[1] == '\'') {
+                word += 2; 
+            }
+
+            printf("\t%s\n", word);
+            addWordOccurrence(word, strlen(word), root);
+        }
+
+        word = strtok(NULL, delimiters);  
     }
 
+    return 0;
+}
+
+//Shruti Completed
+// Helper function to check if a word contains at least one alphabetic character
+int isValidWord(const char* word) {
+    for (int i = 0; word[i]; i++) {
+        if ((word[i] >= 'a' && word[i] <= 'z') || (word[i] >= 'A' && word[i] <= 'Z')) {
+            return 1;
+        }
+    }
     return 0;
 }
 
@@ -94,7 +117,8 @@ int addWordOccurrence(const char* word, int wordLength, struct TrieNode* root) {
 //Shruti Completed
 void printTrieContents(struct TrieNode* root);
 
-char word[100];
+// Changed from 'word' to avoid conflict
+char wordBuffer[256];
 
 //Shruti Completed
 // Function to traverse the Trie and print its contents
@@ -102,13 +126,13 @@ void traverse(struct TrieNode* node, int depth) {
     if (!node) return;
 
     if (node->isEndOfWord) {
-        word[depth] = '\0';
-        printf("%s: %d\n", word, node->count);
+        wordBuffer[depth] = '\0';
+        printf("%s: %d\n", wordBuffer, node->count);
     }
 
     for (int i = 0; i < 26; i++) {
         if (node->children[i]) {
-            word[depth] = 'a' + i;
+            wordBuffer[depth] = 'a' + i;
             traverse(node->children[i], depth + 1);
         }
     }
