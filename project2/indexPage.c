@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 //Sabene completed
 /* TODO: structure definitions */
@@ -61,12 +62,22 @@ int indexPage(const char* url, struct TrieNode* root) {
     // Process the retrieved text and add words to Trie
     char* word = strtok(buffer, delimiters);
     while (word) {
-        if (isValidWord(word)) {
-            // Quick fix: remove leading "b'" if present
-            if (word[0] == 'b' && word[1] == '\'') {
-                word += 2; 
-            }
+        // Remove leading "b'" if present
+        if (word[0] == 'b' && word[1] == '\'') {
+            word += 2;
+        } else if (strcmp(word, "b") == 0) {
+            word = strtok(NULL, delimiters);
+            continue;
+        }
 
+        // Remove trailing single quote if present
+        int len = strlen(word);
+        if (len > 0 && word[len - 1] == '\'') {
+            word[len - 1] = '\0';
+        }
+
+        // Check if it's a valid word now
+        if (isValidWord(word)) {
             printf("\t%s\n", word);
             addWordOccurrence(word, strlen(word), root);
         }
@@ -81,9 +92,7 @@ int indexPage(const char* url, struct TrieNode* root) {
 // Helper function to check if a word contains at least one alphabetic character
 int isValidWord(const char* word) {
     for (int i = 0; word[i]; i++) {
-        if ((word[i] >= 'a' && word[i] <= 'z') || (word[i] >= 'A' && word[i] <= 'Z')) {
-            return 1;
-        }
+        if (isalpha(word[i])) return 1;
     }
     return 0;
 }
@@ -97,11 +106,13 @@ int addWordOccurrence(const char* word, int wordLength, struct TrieNode* root) {
         char ch = word[i];
 
         // Convert uppercase to lowercase
-        if (ch >= 'A' && ch <= 'Z') {
-            ch = ch + ('a' - 'A');
+        if (isupper(ch)) {
+            ch = tolower(ch);
         }
 
-        if (ch < 'a' || ch > 'z') continue;
+        // Skip non-alphabetic characters
+        if (!islower(ch)) continue;
+
         int index = ch - 'a';
 
         if (!current->children[index]) {
@@ -178,15 +189,13 @@ int main(int argc, char** argv){
 //Shruti completed
 int freeTrieMemory(struct TrieNode* root) {
     // Base case
-    if (root == NULL) {
-        return 0;
-    }
+    if (!root) return 0;
 
     for (int i = 0; i < 26; i++) {
-        freeTrieMemory(root->children[i]); // Recursively free children
+        freeTrieMemory(root->children[i]);
     }
 
-    free(root); // Free the current node
+    free(root);
     return 0;
 }
 
@@ -199,19 +208,16 @@ int getText(const char* srcAddr, char* buffer, const int bufSize) {
     snprintf(command, sizeof(command), "curl -s \"%s\" | python3 getText.py", srcAddr);
 
     pipe = popen(command, "r");
-    if (pipe == NULL) {
+    if (!pipe) {
         fprintf(stderr, "ERROR: could not open the pipe for command %s\n", command);
         return 0;
     }
 
     bytesRead = fread(buffer, sizeof(char), bufSize - 1, pipe);
     buffer[bytesRead] = '\0';
-
     pclose(pipe);
-
     return bytesRead;
 }
-
 
 
 
