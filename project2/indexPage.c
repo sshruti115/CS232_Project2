@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
 
 //Sabene completed
 /* TODO: structure definitions */
@@ -56,33 +55,34 @@ int indexPage(const char* url, struct TrieNode* root) {
 
     printf("%s\n", url); // Print the URL as required
 
+    // Step 1: Clean the buffer to remove b'...'-style prefixes
+    char cleanedBuffer[300001];
+    int j = 0;
+    for (int i = 0; i < bytesRead; i++) {
+        // Remove patterns like b'word'
+        if (buffer[i] == 'b' && (buffer[i + 1] == '\'' || buffer[i + 1] == '\"')) {
+            i += 2;
+            while (buffer[i] != '\0' && buffer[i] != '\'' && buffer[i] != '\"') {
+                cleanedBuffer[j++] = buffer[i++];
+            }
+            if (buffer[i] == '\'' || buffer[i] == '\"') i++;
+        } else {
+            cleanedBuffer[j++] = buffer[i];
+        }
+    }
+    cleanedBuffer[j] = '\0';
+
     // Define delimiters for tokenization
     const char* delimiters = " \t\n\r.,!?;:()[]{}\"";
 
-    // Process the retrieved text and add words to Trie
-    char* word = strtok(buffer, delimiters);
+    // Tokenize and process each word
+    char* word = strtok(cleanedBuffer, delimiters);
     while (word) {
-        // Remove leading "b'" if present
-        if (word[0] == 'b' && word[1] == '\'') {
-            word += 2;
-        } else if (strcmp(word, "b") == 0) {
-            word = strtok(NULL, delimiters);
-            continue;
-        }
-
-        // Remove trailing single quote if present
-        int len = strlen(word);
-        if (len > 0 && word[len - 1] == '\'') {
-            word[len - 1] = '\0';
-        }
-
-        // Check if it's a valid word now
         if (isValidWord(word)) {
             printf("\t%s\n", word);
             addWordOccurrence(word, strlen(word), root);
         }
-
-        word = strtok(NULL, delimiters);  
+        word = strtok(NULL, delimiters);
     }
 
     return 0;
@@ -92,7 +92,9 @@ int indexPage(const char* url, struct TrieNode* root) {
 // Helper function to check if a word contains at least one alphabetic character
 int isValidWord(const char* word) {
     for (int i = 0; word[i]; i++) {
-        if (isalpha(word[i])) return 1;
+        if ((word[i] >= 'a' && word[i] <= 'z') || (word[i] >= 'A' && word[i] <= 'Z')) {
+            return 1;
+        }
     }
     return 0;
 }
@@ -104,15 +106,16 @@ int addWordOccurrence(const char* word, int wordLength, struct TrieNode* root) {
     struct TrieNode* current = root;
     for (int i = 0; i < wordLength; i++) {
         char ch = word[i];
+       
 
         // Convert uppercase to lowercase
-        if (isupper(ch)) {
-            ch = tolower(ch);
+        if (ch >= 'A' && ch <= 'Z') 
+       {
+            ch = ch + ('a' - 'A');
+        
         }
 
-        // Skip non-alphabetic characters
-        if (!islower(ch)) continue;
-
+        if (ch < 'a' || ch > 'z') continue;
         int index = ch - 'a';
 
         if (!current->children[index]) {
@@ -188,13 +191,10 @@ int main(int argc, char** argv){
 
 //Shruti completed
 int freeTrieMemory(struct TrieNode* root) {
-    // Base case
-    if (!root) return 0;
-
+    if (root == NULL) return 0;
     for (int i = 0; i < 26; i++) {
         freeTrieMemory(root->children[i]);
     }
-
     free(root);
     return 0;
 }
@@ -208,18 +208,16 @@ int getText(const char* srcAddr, char* buffer, const int bufSize) {
     snprintf(command, sizeof(command), "curl -s \"%s\" | python3 getText.py", srcAddr);
 
     pipe = popen(command, "r");
-    if (!pipe) {
+    if (pipe == NULL) {
         fprintf(stderr, "ERROR: could not open the pipe for command %s\n", command);
         return 0;
     }
 
     bytesRead = fread(buffer, sizeof(char), bufSize - 1, pipe);
     buffer[bytesRead] = '\0';
+
     pclose(pipe);
+
     return bytesRead;
 }
-
-
-
-
 
