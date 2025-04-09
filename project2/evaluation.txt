@@ -1,14 +1,15 @@
-
-Sabene:  Approx. 4 hours
+Sabene:  Approx. Nine hours
 Sabene completed the following:
         1. Set up github directory with all files
-        2. struct TrieNode
-        3. struct TrieNode* getNode()
-        4. main
-        5. int freeTrieMemory
-        6. Wrote evaluation.txt except for logging Shruti's hours
-        7. Assisted with debugging and testing the code including memory leaks
-Shruti: Approx 6 hours 
+        2. Implemented the following
+        - struct TrieNode
+        - struct TrieNode* getNode()
+        - main
+        - int freeTrieMemory
+        3. Tested for memory leaks
+        4. Debugged
+        5. Met with Dr. Chen and Neal 
+Shruti: Approx 10 hours 
 Shruti completed the following:
     1. Set up the GitHub repository for the project.
     2. Implemented the following functions:
@@ -17,4 +18,6 @@ Shruti completed the following:
    - void printTrieContents
    - void traverse
     3. Assisted with debugging and testing the code.
+    4. Worked on testing and making sure the code passes the testcases.
+    5. Met with Dr. Chen and Neal 
 
